@@ -56,14 +56,18 @@ function handleDisconnect() {
 
 handleDisconnect();
 
-app.get('/', function(request, response) {
-    connection.query('SELECT * from users1', function(err, rows, fields){
-        if(err){
-            console.log('error: ', err);
-            throw err;
-        }
-    response.send(['Hello World', rows]);
-    });
+// app.get('/', function(request, response) {
+//     connection.query('SELECT * from users1', function(err, rows, fields){
+//         if(err){
+//             console.log('error: ', err);
+//             throw err;
+//         }
+//     response.send(['Hello World', rows]);
+//     });
+// });
+
+app.get("/",(req, res) => {
+    res.sendFile(__dirname + "/table1.html");
 });
 
 var port = process.env.PORT || 5000;
