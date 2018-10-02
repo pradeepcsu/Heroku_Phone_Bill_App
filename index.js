@@ -72,9 +72,9 @@ app.post('/getMonthlybill',function(req, res){
 	});
 });
 
-app.get("/",(req, res) => {
-    res.sendFile(__dirname + "/table1.html");
-});
+// app.get("/",(req, res) => {
+//     res.sendFile(__dirname + "/table1.html");
+// });
 
 app.post('/getDetailedbill',function(req, res){
 	res.setHeader('Content-Type', 'application/json');
