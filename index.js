@@ -62,7 +62,7 @@ app.post('/getMonthlybill',function(req, res){
 		} 
 		else 
 		{
-            connection.end();
+            // connection.end();
 			res.send(JSON.stringify({
 				data: rows,
 				error:""
