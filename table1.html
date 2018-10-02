@@ -10,9 +10,92 @@
 
 </head>
 <body>
+    <script>
+        function getdata(selectedMonth, selectedYear)
+        {
+          $.ajax({
+                    type: "POST",
+                    url: "http://localhost:5000/getMonthlybill",
+                    data: {selectedMonth:selectedMonth, selectedYear:selectedYear},
+              error: function (jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                  msg = 'Not connect.\n Verify Network.';
+                } else if (jqXHR.status == 404) {
+                  msg = 'Requested page not found. [404]';
+                } else if (jqXHR.status == 500) {
+                  msg = 'Internal Server Error [500].';
+                } else if (exception === 'parsererror') {
+                  msg = 'Requested JSON parse failed.';
+                } else if (exception === 'timeout') {
+                  msg = 'Time out error.';
+                } else if (exception === 'abort') {
+                  msg = 'Ajax request aborted.';
+                } else {
+                  msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                }
+                //$('#post').html(msg);
+                alert(msg);
+              },
+              success: function(data) {
+                var str="";
+                //console.log(data.data);                 
+                
+
+                // str='<table class="table"><thead></thead><tbody><tr class="warning"><td>Date of Execution</td><td>'+selectedDate+'</td></tr> <tr class="info"><td>Number of Tests Executed</td><td>'+data.total+'</td></tr><tr class="success"><td>Number of Tests Passed</td><td>'+data.pass+'</td></tr><tr class="danger"><td>Number of Tests Failed</td><td>'+data.fail+'</td> </tr></tbody></table>';
+
+               str = ' <table class="table" width="400"><thead></thead><tbody>';
+                for(var i=0;i<data.data.length;i++)
+                {
+                  if(i%4==0){
+                    str = str +'<tr class="info"><td>'+data.data[i].name+'</td><td>$'+data.data[i].phone_bill+'</td></tr>';
+                  }
+                  else if (i%4==1){
+                    str = str +'<tr class="success"><td>'+data.data[i].name+'</td><td>$'+data.data[i].phone_bill+'</td></tr>';
+                  }
+                  else if (i%4==2){
+                    str = str +'<tr class="warning"><td>'+data.data[i].name+'</td><td>$'+data.data[i].phone_bill+'</td></tr>';
+                  }
+                  else {
+                    str = str +'<tr class="danger"><td>'+data.data[i].name+'</td><td>$'+data.data[i].phone_bill+'</td></tr>';
+                  }
+                }
+                str = str+'</tbody></table>';                  
+                $("#newtable").html(str);
+
+                 str = ' <table class="table" width="400"><thead></thead><tbody>';
+                for(var i=0;i<data.data.length;i++)
+                {
+                    str = str +'<tr class="info"><td>Tax</td><td>'+data.data[i].Tax+'</td></tr>';
+                    str = str +'<tr class="success"><td>Insurance</td><td>'+data.data[i].Insurance+'</td></tr>';
+
+                    str = str +'<tr class="warning"><td>Device</td><td>'+data.data[i].Device+'</td></tr>';
+
+                    str = str +'<tr class="danger"><td>ExtraCharge</td><td>'+data.data[i].ExtraCharges+'</td></tr>';
+                  
+                }
+                str = str+'</tbody></table>';   
+        $("#detailedtable").html(str);
+               
+        //to autorefresh
+        //setTimeout(function(){myFunction();}, 3000);
+        
+                    }
+                });
+        }
+
+function myFunction() {
+    var x = document.getElementById("month").value;
+    var y = document.getElementById("year").value;
+
+    document.getElementById("demo").innerHTML = x;
+	getdata(x,y);
+}
+</script>
 <div class = "jumbotron text-center">
 <div class="container">
-<h2>Monthly Phone Bill</h2>
+  <h2>Monthly Phone Bill</h2>
+
 <label for="bday"><font size="4">Select Month: </font></label>
 <!-- <input type="month" id="start" name="start" min="2018-03" value="2018-05" /> -->
 <select id="month" name="month">
@@ -23,8 +106,8 @@
     <option>May</option>
     <option>June</option>
     <option>July</option>
-    <option>August</option>
-    <option selected>September</option>
+    <option selected>August</option>
+    <option>September</option>
     <option>October</option>
     <option>November</option>
     <option>December</option>
@@ -37,8 +120,49 @@
 <button class ="btn btn-primary btn-md" onclick="myFunction()">View Bill</button>
 <p>
 <p></p>
-<table class="table" width="400"><thead></thead><tbody><tr class="info"><td>Suresh</td><td>55</td></tr><tr class="success"><td>Pradeep</td><td>23</td></tr><tr class="danger"><td>Pavan</td><td>22</td> </tr><tr class="warning"><td>Srinu</td><td>55</td></tr><tr class="info"><td>Kaja</td><td>55</td></tr><tr class="success"><td>Gopal</td><td>55</td></tr><tr class="danger"><td>Chandu</td><td>55</td></tr></tbody></table>
+<center>
+<div style="width:700px; height:300px">
+<div id="newtable"></div>
+</div>
+</center>
 
+
+
+<h2>Get Detailed Bill</h2>
+<label for="bday"><font size="4">Name: </font></label>
+<select id="name" name="name">
+  <option>Chandu</option>
+  <option>Suresh</option>
+  <option>Pavan</option>
+  <option>Srinu</option>
+  <option>Gopal</option>
+  <option>Kaja</option>
+</select>
+<label for="bday"><font size="4">Month: </font></label>
+<!-- <input type="month" id="start" name="start" min="2018-03" value="2018-05" /> -->
+<select id="month" name="month">
+    <option >January</option>
+    <option>February</option>
+    <option>March</option>
+    <option>April</option>
+    <option>May</option>
+    <option>June</option>
+    <option>July</option>
+    <option selected>August</option>
+    <option >September</option>
+    <option>October</option>
+    <option>November</option>
+    <option>December</option>
+  </select>
+  <select id="year" name="year">
+      <option selected>2018</option>
+      <option>2019</option>
+    </select>
+    <button class ="btn btn-primary btn-md" onclick="myFunction()">View </button>
+    <p></p>
+    <div id="detailedtable">
+    <table class="table" width="400"><thead></thead><tbody><tr class="info"><td>Network</td><td>15</td></tr><tr class="success"><td>Tax</td><td>23</td></tr><tr class="danger"><td>Device</td><td>32</td> </tr><tr class="warning"><td>Insurance</td><td>9</td></tr><tr class="info"><td>Extra Charges</td><td>2</td></tr></tbody></table>
+  </div>
 <span id="demo"></span>
 </p>
 <p id="paragraph"> </p>

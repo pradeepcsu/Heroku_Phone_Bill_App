@@ -1,76 +1,108 @@
 var express = require("express");
 var mysql = require('mysql');
 var app = express();
+var connection;
 bodyParser = require('body-parser'),
 path = require("path");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); 
 
-
-var db_config = {
+  var db_config = {
     host: 'us-cdbr-iron-east-01.cleardb.net',
     user: 'b374f3f0f40afe',
     password: '72b67f0d',
     database: 'heroku_7cd88f660d93013'
 };
 
-// connection.connect();
-
-
-// app.get('/', function(request, response) {
-//     connection.query('SELECT * from users1', function(err, rows, fields){
-//         if(err){
-//             console.log('error: ', err);
-//             throw err;
-//         }
-//     response.send(['Hello World', rows]);
-//     });
-// });
-
-// var port = process.env.PORT || 5000;
-// app.listen(port, function() {
-//     console.log("Listening on " + port);
-// });
-
-var connection;
+var port = process.env.PORT || 5000;
+app.listen(port, function() {
+    console.log("Listening on " + port);
+});
 
 function handleDisconnect() {
     console.log('1. connecting to db:');
-    connection = mysql.createConnection(db_config); // Recreate the connection, since old one can't be used
-    connection.connect(function(err) {              	// The server is either down
-        if (err) {                                     // or restarting (takes a while sometimes).
+    connection = mysql.createConnection(db_config);
+    connection.connect(function(err) {              
+        if (err) {                                  
             console.log('2. error when connecting to db:', err);
-            setTimeout(handleDisconnect, 3000); // We introduce a delay before attempting to reconnect,
-        }                                     	// to avoid a hot loop, and to allow our node script to
-    });                                     	// process asynchronous requests in the meantime.
-    											// If you're also serving http, display a 503 error.
+            setTimeout(handleDisconnect, 3000); 
+        }                                     
+    });                                     	
+    											
     connection.on('error', function(err) {
         console.log('3. db error', err);
-        if (err.code === 'PROTOCOL_CONNECTION_LOST') { 	// Connection to the MySQL server is usually
-            handleDisconnect();                      	// lost due to either server restart, or a
-        } else {                                      	// connnection idle timeout (the wait_timeout
-            throw err;                                  // server variable configures this)
+        if (err.code === 'PROTOCOL_CONNECTION_LOST') { 
+            handleDisconnect();                      	
+        } else {                                      	
+            throw err;                                  
         }
     });
 }
 
-handleDisconnect();
+// handleDisconnect();
 
-// app.get('/', function(request, response) {
-//     connection.query('SELECT * from users1', function(err, rows, fields){
-//         if(err){
-//             console.log('error: ', err);
-//             throw err;
-//         }
-//     response.send(['Hello World', rows]);
-//     });
-// });
+app.post('/getMonthlybill',function(req, res){
+	res.setHeader('Content-Type', 'application/json');
+	  res.header("Access-Control-Allow-Origin", "*");
+//   connection.connect();
+    handleDisconnect();
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	// Request methods you wish to allow
+    var selectedMonth=req.body.selectedMonth;
+    var selectedYear=req.body.selectedYear;
+	console.log(selectedMonth+"    sample ");
+    var sql="select * from users1 where month='"+selectedMonth+"' AND year = '"+selectedYear+"'";
+	connection.query(sql, function(err, rows) {
+		if (err) {
+            // connection.end();
+			res.send(JSON.stringify({
+				data: [],
+				error:err
+			}));
+		} 
+		else 
+		{
+            connection.end();
+			res.send(JSON.stringify({
+				data: rows,
+				error:""
+            }));
+            
+		}
+	});
+});
 
 app.get("/",(req, res) => {
     res.sendFile(__dirname + "/table1.html");
 });
 
-var port = process.env.PORT || 5000;
-app.listen(port, function() {
-    console.log("Listening on " + port);
+app.post('/getDetailedbill',function(req, res){
+	res.setHeader('Content-Type', 'application/json');
+	  res.header("Access-Control-Allow-Origin", "*");
+//   connection.connect();
+    handleDisconnect();
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	// Request methods you wish to allow
+    var selectedMonth=req.body.selectedMonth;
+    var selectedYear=req.body.selectedYear;
+	console.log(selectedMonth+"    sample ");
+    var sql="select * from users1 where month='"+selectedMonth+"' AND year = '"+selectedYear+"' AND name = '"+selectedName+"'";
+	connection.query(sql, function(err, rows) {
+		if (err) {
+            // connection.end();
+			res.send(JSON.stringify({
+				data: [],
+				error:err
+			}));
+		} 
+		else 
+		{
+            // connection.end();
+			res.send(JSON.stringify({
+				data: rows,
+				error:""
+            }));
+            
+		}
+	});
 });
