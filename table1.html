@@ -15,7 +15,7 @@
         {
           $.ajax({
                     type: "POST",
-                    url: "http://localhost:5000/getMonthlybill",
+                    url: "/getMonthlybill",
                     data: {selectedMonth:selectedMonth, selectedYear:selectedYear},
               error: function (jqXHR, exception) {
                 var msg = '';
@@ -63,18 +63,57 @@
                 str = str+'</tbody></table>';                  
                 $("#newtable").html(str);
 
-                 str = ' <table class="table" width="400"><thead></thead><tbody>';
-                for(var i=0;i<data.data.length;i++)
-                {
-                    str = str +'<tr class="info"><td>Tax</td><td>'+data.data[i].Tax+'</td></tr>';
-                    str = str +'<tr class="success"><td>Insurance</td><td>'+data.data[i].Insurance+'</td></tr>';
+        //          str = ' <table class="table" width="400"><thead></thead><tbody>';
+        //             str = str +'<tr class="info"><td>Tax</td><td>'+data.data[i].Tax+'</td></tr>';
+        //             str = str +'<tr class="success"><td>Insurance</td><td>'+data.data[i].Insurance+'</td></tr>';
+        //             str = str +'<tr class="warning"><td>Device</td><td>'+data.data[i].Device+'</td></tr>';
+        //             str = str +'<tr class="danger"><td>ExtraCharge</td><td>'+data.data[i].ExtraCharges+'</td></tr>';               
+        //         str = str+'</tbody></table>';   
+        // $("#detailedtable").html(str);
+               
+        //to autorefresh
+        //setTimeout(function(){myFunction();}, 3000);
+        
+                    }
+                });
+        }
 
-                    str = str +'<tr class="warning"><td>Device</td><td>'+data.data[i].Device+'</td></tr>';
-
-                    str = str +'<tr class="danger"><td>ExtraCharge</td><td>'+data.data[i].ExtraCharges+'</td></tr>';
-                  
+        function getdata2(selectedMonth, selectedYear, selectedName)
+        {
+          $.ajax({
+                    type: "POST",
+                    url: "/getDetailedbill",
+                    data: {selectedMonth:selectedMonth, selectedYear:selectedYear, selectedName:selectedName},
+              error: function (jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                  msg = 'Not connect.\n Verify Network.';
+                } else if (jqXHR.status == 404) {
+                  msg = 'Requested page not found. [404]';
+                } else if (jqXHR.status == 500) {
+                  msg = 'Internal Server Error [500].';
+                } else if (exception === 'parsererror') {
+                  msg = 'Requested JSON parse failed.';
+                } else if (exception === 'timeout') {
+                  msg = 'Time out error.';
+                } else if (exception === 'abort') {
+                  msg = 'Ajax request aborted.';
+                } else {
+                  msg = 'Uncaught Error.\n' + jqXHR.responseText;
                 }
-                str = str+'</tbody></table>';   
+                //$('#post').html(msg);
+                alert(msg);
+              },
+              success: function(data) {
+              var str="";
+              str = ' <table class="table" width="400"><thead></thead><tbody>';
+              str = str +'<tr class="info"><td style="font-weight:bold">Total Bill</td><td style="font-weight:bold">$'+data.data[0].phone_bill+'</td></tr>';
+              str = str +'<tr class="success"><td>Network Charge</td><td>$'+data.data[0].Network+'</td></tr>';
+              str = str +'<tr class="warning"><td>Tax</td><td>$'+data.data[0].Tax+'</td></tr>';
+              str = str +'<tr class="danger"><td>Insurance</td><td>$'+data.data[0].Insurance+'</td></tr>';
+              str = str +'<tr class="info"><td>Device</td><td>$'+data.data[0].Device+'</td></tr>';
+              str = str +'<tr class="success"><td>ExtraCharge</td><td>$'+data.data[0].ExtraCharges+'</td></tr>';              
+              str = str+'</tbody></table>';   
         $("#detailedtable").html(str);
                
         //to autorefresh
@@ -87,10 +126,20 @@
 function myFunction() {
     var x = document.getElementById("month").value;
     var y = document.getElementById("year").value;
-
-    document.getElementById("demo").innerHTML = x;
+    // document.getElementById("demo").innerHTML = x;
 	getdata(x,y);
 }
+function myFunction2() {
+    var x = document.getElementById("month2").value;
+    var y = document.getElementById("year2").value;
+    var z = document.getElementById("name").value;
+    // document.getElementById("demo2").innerHTML = x;
+		getdata2(x,y,z);
+}
+$( document ).ready(function() {
+    myFunction();
+    myFunction2();
+});
 </script>
 <div class = "jumbotron text-center">
 <div class="container">
@@ -131,16 +180,16 @@ function myFunction() {
 <h2>Get Detailed Bill</h2>
 <label for="bday"><font size="4">Name: </font></label>
 <select id="name" name="name">
-  <option>Chandu</option>
-  <option>Suresh</option>
-  <option>Pavan</option>
-  <option>Srinu</option>
-  <option>Gopal</option>
-  <option>Kaja</option>
+  <option>chandu</option>
+  <option>suresh</option>
+  <option>pavan</option>
+  <option>srinu</option>
+  <option>gopal</option>
+  <option>kaja</option>
 </select>
 <label for="bday"><font size="4">Month: </font></label>
 <!-- <input type="month" id="start" name="start" min="2018-03" value="2018-05" /> -->
-<select id="month" name="month">
+<select id="month2" name="month">
     <option >January</option>
     <option>February</option>
     <option>March</option>
@@ -154,41 +203,29 @@ function myFunction() {
     <option>November</option>
     <option>December</option>
   </select>
-  <select id="year" name="year">
+  <label for="bday"><font size="4">Year: </font></label>
+  <select id="year2" name="year">
       <option selected>2018</option>
       <option>2019</option>
     </select>
-    <button class ="btn btn-primary btn-md" onclick="myFunction()">View </button>
+    <button class ="btn btn-primary btn-md" onclick="myFunction2()">View </button>
     <p></p>
-    <div id="detailedtable">
-    <table class="table" width="400"><thead></thead><tbody><tr class="info"><td>Network</td><td>15</td></tr><tr class="success"><td>Tax</td><td>23</td></tr><tr class="danger"><td>Device</td><td>32</td> </tr><tr class="warning"><td>Insurance</td><td>9</td></tr><tr class="info"><td>Extra Charges</td><td>2</td></tr></tbody></table>
+  <center>
+  <div style="width:700px; height:300px">
+  <div id="detailedtable"></div>
   </div>
-<span id="demo"></span>
+  </center>
+    <!-- <table class="table" width="400"><thead></thead><tbody><tr class="info"><td>Network</td><td>15</td></tr><tr class="success"><td>Tax</td><td>23</td></tr><tr class="danger"><td>Device</td><td>32</td> </tr><tr class="warning"><td>Insurance</td><td>9</td></tr><tr class="info"><td>Extra Charges</td><td>2</td></tr></tbody></table> -->
+  </div>
+<!-- <span id="demo2"></span> -->
 </p>
-<p id="paragraph"> </p>
+<!-- <p id="paragraph"> </p> -->
 
-<div class = "container">
-<center>
-<div style="width:700px; height:700px">
-<div id="newtable">
-<table class="table" width="400" >
-    <thead>
-    </thead>
-    <tbody>   
-    </tbody>
-  </table>
-  </div>
-  </div>
-</div>
+<!-- <div class = "container"> -->
 
-</center>
 
-     <thead>
-    </thead>
-    <tbody>   
-    </tbody>
-  </table>
-  </div>
+  <!-- </table> -->
+  <!-- </div> -->
   </div>
 </div>
 
@@ -196,10 +233,5 @@ function myFunction() {
 
 </div>
 </div>
-<script>
-
-
-</script>
-
 </body>
 </html>
