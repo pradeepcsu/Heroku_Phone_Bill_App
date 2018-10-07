@@ -39,7 +39,7 @@
               },
               success: function(data) {
                 var str="";
-                //console.log(data.data);                 
+                console.log(data.data);                 
                 
 
                 // str='<table class="table"><thead></thead><tbody><tr class="warning"><td>Date of Execution</td><td>'+selectedDate+'</td></tr> <tr class="info"><td>Number of Tests Executed</td><td>'+data.total+'</td></tr><tr class="success"><td>Number of Tests Passed</td><td>'+data.pass+'</td></tr><tr class="danger"><td>Number of Tests Failed</td><td>'+data.fail+'</td> </tr></tbody></table>';
@@ -124,6 +124,66 @@
                 });
         }
 
+function getdata3(selectedMonth, selectedYear)
+        {
+          $.ajax({
+                    type: "POST",
+                    url: "/getPaymentInfo",
+                    data: {selectedMonth:selectedMonth, selectedYear:selectedYear},
+              error: function (jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                  msg = 'Not connect.\n Verify Network.';
+                } else if (jqXHR.status == 404) {
+                  msg = 'Requested page not found. [404]';
+                } else if (jqXHR.status == 500) {
+                  msg = 'Internal Server Error [500].';
+                } else if (exception === 'parsererror') {
+                  msg = 'Requested JSON parse failed.';
+                } else if (exception === 'timeout') {
+                  msg = 'Time out error.';
+                } else if (exception === 'abort') {
+                  msg = 'Ajax request aborted.';
+                } else {
+                  msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                }
+                alert(msg);
+              },
+              success: function(data) {
+                var str="";
+                var str2="";
+
+                for(var a=0;a<data.data.length;a++)
+                {
+                  if(data.data[a].paid_monthly_bill == "yes"){
+                      str2 = data.data[a].name;
+                    }
+                }              
+                
+               str = '<table class="table" width="400"><thead><tr><th>Name</th><th>Owes</th><th>Amount</th></tr></thead><tbody>';
+                for(var i=0;i<data.data.length;i++)
+                {
+
+                  if(i%4==0){
+                    str = str +'<tr class="info"><td>'+data.data[i].name+'</td><td>'+str2+'</td><td>$'+data.data[i].dues+'</td></tr>';
+                  }
+                  else if (i%4==1){
+                    str = str +'<tr class="success"><td>'+data.data[i].name+'</td><td>'+str2+'</td><td>$'+data.data[i].dues+'</td></tr>';
+                  }
+                  else if (i%4==2){
+                    str = str +'<tr class="warning"><td>'+data.data[i].name+'</td><td>'+str2+'</td><td>$'+data.data[i].dues+'</td></tr>';
+                  }
+                  else {
+                    str = str +'<tr class="danger"><td>'+data.data[i].name+'</td><td>'+str2+'</td><td>$'+data.data[i].dues+'</td></tr>';
+                  }
+                }
+                str = str+'</tbody></table>';                  
+                $("#paymentstable").html(str);
+        
+                    }
+                });
+        }
+
 function myFunction() {
     var x = document.getElementById("month").value;
     var y = document.getElementById("year").value;
@@ -137,9 +197,17 @@ function myFunction2() {
     // document.getElementById("demo2").innerHTML = x;
 		getdata2(x,y,z);
 }
+function myFunction3() {
+    var x = document.getElementById("month3").value;
+    var y = document.getElementById("year3").value;
+    // document.getElementById("demo").innerHTML = x;
+    getdata3(x,y);
+}
 $( document ).ready(function() {
     myFunction();
     myFunction2();
+    myFunction3();
+
 });
 </script>
 <div class = "jumbotron text-center">
@@ -176,8 +244,6 @@ $( document ).ready(function() {
 <div id="newtable"></div>
 </div>
 </center>
-
-
 
 <h2>Get Detailed Bill</h2>
 <label for="bday"><font size="4">Name: </font></label>
@@ -218,18 +284,41 @@ $( document ).ready(function() {
   <div id="detailedtable"></div>
   </div>
   </center>
-    <!-- <table class="table" width="400"><thead></thead><tbody><tr class="info"><td>Network</td><td>15</td></tr><tr class="success"><td>Tax</td><td>23</td></tr><tr class="danger"><td>Device</td><td>32</td> </tr><tr class="warning"><td>Insurance</td><td>9</td></tr><tr class="info"><td>Extra Charges</td><td>2</td></tr></tbody></table> -->
+
+  <h2>Payment Information</h2>
+
+  <label for="bday"><font size="4">Month: </font></label>
+  <!-- <input type="month" id="start" name="start" min="2018-03" value="2018-05" /> -->
+  <select id="month3" name="month3">
+      <option >January</option>
+      <option>February</option>
+      <option>March</option>
+      <option>April</option>
+      <option>May</option>
+      <option>June</option>
+      <option>July</option>
+      <option selected>August</option>
+      <option>September</option>
+      <option>October</option>
+      <option>November</option>
+      <option>December</option>
+    </select>
+    <select id="year3" name="year3">
+        <option selected>2018</option>
+        <option>2019</option>
+      </select>
+  <!-- <input type="date" name="date" data-date-format ="yyyy-mm-dd" id="dateinput" value="2018-09-22"> -->
+  <button class ="btn btn-primary btn-md" onclick="myFunction3()">View Payments</button>
+  <p>
+  <p></p>
+  <center>
+  <div style="width:300px; height:320px">
+  <div id="paymentstable"></div>
   </div>
-<!-- <span id="demo2"></span> -->
+  </center>
+  </div>
 </p>
-<!-- <p id="paragraph"> </p> -->
-
-<!-- <div class = "container"> -->
-
-
-  <!-- </table> -->
-  <!-- </div> -->
-  </div>
+</div>
 </div>
 
 </center>

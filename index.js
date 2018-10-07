@@ -110,9 +110,9 @@ app.post('/getDetailedbill',function(req, res){
     var selectedMonth=req.body.selectedMonth;
     var selectedYear=req.body.selectedYear;
     var selectedName=req.body.selectedName;
-    console.log(selectedName+"    sample ");
-    console.log(selectedMonth+"    sample ");
-	console.log(selectedYear+"    sample ");
+    // console.log(selectedName+"    sample ");
+    // console.log(selectedMonth+"    sample ");
+	// console.log(selectedYear+"    sample ");
 
     var sql="select * from users1 where month='"+selectedMonth+"' AND year = '"+selectedYear+"' AND name = '"+selectedName+"'";
 	// connection.query(sql, function(err, rows) {
@@ -159,6 +159,40 @@ app.post('/getDetailedbill',function(req, res){
         });
 
 
+        app.post('/getPaymentInfo',function(req, res){
+            res.setHeader('Content-Type', 'application/json');
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            var selectedMonth=req.body.selectedMonth;
+            var selectedYear=req.body.selectedYear;
+            console.log(selectedMonth+"    sample3 ");
+            // var sql="select * from users1 where month='"+selectedMonth+"' AND year = '"+selectedYear+"'";
+            var sql="select name, dues, paid_monthly_bill from users1 where month ='"+selectedMonth+"' AND year = '"+selectedYear+"' ORDER BY name";     
+        
+            // connection.query(sql, function(err, rows) {
+            pool.query(sql, function (err, rows) {
+                // if (error) throw error;
+                // console.log('The solution is: ', results[0].solution);
+        
+                if (err) {
+                    // connection.end();
+                    res.send(JSON.stringify({
+                        data: [],
+                        error:err
+                    }));
+                } 
+                else 
+                {
+                    // connection.end();
+                    res.send(JSON.stringify({
+                        data: rows,
+                        error:""
+                    }));
+                    
+                }
+            });
+        });
+        
 
 
 
