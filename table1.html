@@ -40,11 +40,8 @@
               success: function(data) {
                 var str="";
                 console.log(data.data);                 
-                
 
-                // str='<table class="table"><thead></thead><tbody><tr class="warning"><td>Date of Execution</td><td>'+selectedDate+'</td></tr> <tr class="info"><td>Number of Tests Executed</td><td>'+data.total+'</td></tr><tr class="success"><td>Number of Tests Passed</td><td>'+data.pass+'</td></tr><tr class="danger"><td>Number of Tests Failed</td><td>'+data.fail+'</td> </tr></tbody></table>';
-
-               str = ' <table class="table" width="400"><thead></thead><tbody>';
+               str = '<table class="table" width="400"><thead></thead><tbody>';
                 for(var i=0;i<data.data.length;i++)
                 {
                   if(i%4==0){
@@ -62,17 +59,6 @@
                 }
                 str = str+'</tbody></table>';                  
                 $("#newtable").html(str);
-
-        //          str = ' <table class="table" width="400"><thead></thead><tbody>';
-        //             str = str +'<tr class="info"><td>Tax</td><td>'+data.data[i].Tax+'</td></tr>';
-        //             str = str +'<tr class="success"><td>Insurance</td><td>'+data.data[i].Insurance+'</td></tr>';
-        //             str = str +'<tr class="warning"><td>Device</td><td>'+data.data[i].Device+'</td></tr>';
-        //             str = str +'<tr class="danger"><td>ExtraCharge</td><td>'+data.data[i].ExtraCharges+'</td></tr>';               
-        //         str = str+'</tbody></table>';   
-        // $("#detailedtable").html(str);
-               
-        //to autorefresh
-        //setTimeout(function(){myFunction();}, 3000);
         
                     }
                 });
@@ -152,6 +138,7 @@ function getdata3(selectedMonth, selectedYear)
               success: function(data) {
                 var str="";
                 var str2="";
+                console.log(data);
 
                 for(var a=0;a<data.data.length;a++)
                 {
@@ -160,21 +147,21 @@ function getdata3(selectedMonth, selectedYear)
                     }
                 }              
                 
-               str = '<table class="table" width="400"><thead><tr><th>Name</th><th>Owes</th><th>Amount</th></tr></thead><tbody>';
+               str = '<table class="table" width="400"><thead><tr><th>Name</th><th>Owes</th><th>Amount</th><th>Payment</th></tr></thead><tbody>';
                 for(var i=0;i<data.data.length;i++)
                 {
 
                   if(i%4==0){
-                    str = str +'<tr class="info"><td>'+data.data[i].name+'</td><td>'+str2+'</td><td>$'+data.data[i].dues+'</td></tr>';
+                    str = str +'<tr class="info"><td>'+data.data[i].name+'</td><td>'+str2+'</td><td>$'+data.data[i].dues+'</td><td><button onclick="function2('+data.data[i].number+')">paid</button></td></tr>';
                   }
                   else if (i%4==1){
-                    str = str +'<tr class="success"><td>'+data.data[i].name+'</td><td>'+str2+'</td><td>$'+data.data[i].dues+'</td></tr>';
+                    str = str +'<tr class="success"><td>'+data.data[i].name+'</td><td>'+str2+'</td><td>$'+data.data[i].dues+'</td><td><button onclick="function2('+data.data[i].number+')">paid</button></td></tr>';
                   }
                   else if (i%4==2){
-                    str = str +'<tr class="warning"><td>'+data.data[i].name+'</td><td>'+str2+'</td><td>$'+data.data[i].dues+'</td></tr>';
+                    str = str +'<tr class="warning"><td>'+data.data[i].name+'</td><td>'+str2+'</td><td>$'+data.data[i].dues+'</td><td><button onclick="function2('+data.data[i].number+')">paid</button></td></tr>';
                   }
                   else {
-                    str = str +'<tr class="danger"><td>'+data.data[i].name+'</td><td>'+str2+'</td><td>$'+data.data[i].dues+'</td></tr>';
+                    str = str +'<tr class="danger"><td>'+data.data[i].name+'</td><td>'+str2+'</td><td>$'+data.data[i].dues+'</td><td><button onclick="function2('+data.data[i].number+')">paid</button></td></tr>';
                   }
                 }
                 str = str+'</tbody></table>';                  
@@ -183,6 +170,47 @@ function getdata3(selectedMonth, selectedYear)
                     }
                 });
         }
+
+function function2(id) {
+   console.log(id);
+  //  return confirm("Are you sure you want to delete?");
+
+   var result = confirm("Want to mark this as paid?");
+if (result) {
+   
+
+ $.ajax({
+                    type: "POST",
+                    url: "/updatePaymentInfo",
+                    data: {number:id},
+              error: function (jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                  msg = 'Not connect.\n Verify Network.';
+                } else if (jqXHR.status == 404) {
+                  msg = 'Requested page not found. [404]';
+                } else if (jqXHR.status == 500) {
+                  msg = 'Internal Server Error [500].';
+                } else if (exception === 'parsererror') {
+                  msg = 'Requested JSON parse failed.';
+                } else if (exception === 'timeout') {
+                  msg = 'Time out error.';
+                } else if (exception === 'abort') {
+                  msg = 'Ajax request aborted.';
+                } else {
+                  msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                }
+                alert(msg);
+              },
+              success: function(data) {
+                var str="";
+                var str2="";
+                console.log(data);        
+              }
+                });
+
+                myFunction3();
+}}
 
 function myFunction() {
     var x = document.getElementById("month").value;
@@ -216,7 +244,6 @@ $( document ).ready(function() {
   <h2>Monthly Phone Bill</h2>
 
 <label for="bday"><font size="4">Select Month: </font></label>
-<!-- <input type="month" id="start" name="start" min="2018-03" value="2018-05" /> -->
 <select id="month" name="month">
     <option >January</option>
     <option>February</option>
@@ -235,7 +262,6 @@ $( document ).ready(function() {
       <option selected>2018</option>
       <option>2019</option>
     </select>
-<!-- <input type="date" name="date" data-date-format ="yyyy-mm-dd" id="dateinput" value="2018-09-22"> -->
 <button class ="btn btn-primary btn-md" onclick="myFunction()">View Bill</button>
 <p>
 <p></p>
@@ -257,7 +283,6 @@ $( document ).ready(function() {
   <option>kaja</option>
 </select>
 <label for="bday"><font size="4">Month: </font></label>
-<!-- <input type="month" id="start" name="start" min="2018-03" value="2018-05" /> -->
 <select id="month2" name="month">
     <option >January</option>
     <option>February</option>
@@ -288,7 +313,6 @@ $( document ).ready(function() {
   <h2>Payment Information</h2>
 
   <label for="bday"><font size="4">Month: </font></label>
-  <!-- <input type="month" id="start" name="start" min="2018-03" value="2018-05" /> -->
   <select id="month3" name="month3">
       <option >January</option>
       <option>February</option>
