@@ -212,6 +212,49 @@ if (result) {
                 myFunction3();
 }}
 
+
+function updatebill(month,year,name,totalbill,paidbill) {  
+  var result = confirm("Want to add "+ totalbill + " for "+name+ "?");
+if (result) {
+ $.ajax({
+              type: "POST",
+              url: "/updateBillInfo",
+              data: {month:month, year:year, name:name, totalbill:totalbill, paidbill:paidbill},
+        error: function (jqXHR, exception) {
+          var msg = '';
+          if (jqXHR.status === 0) {
+            msg = 'Not connect.\n Verify Network.';
+          } else if (jqXHR.status == 404) {
+            msg = 'Requested page not found. [404]';
+          } else if (jqXHR.status == 500) {
+            msg = 'Internal Server Error [500].';
+          } else if (exception === 'parsererror') {
+            msg = 'Requested JSON parse failed.';
+          } else if (exception === 'timeout') {
+            msg = 'Time out error.';
+          } else if (exception === 'abort') {
+            msg = 'Ajax request aborted.';
+          } else {
+            msg = 'Uncaught Error.\n' + jqXHR.responseText;
+          }
+          alert(msg);
+        },
+        success: function(data) {
+          console.log(data);        
+        }
+          });
+
+}}
+
+function myFunctionub() {
+    var a = document.getElementById("monthab").value;
+    var b = document.getElementById("yearab").value;
+    var c = document.getElementById("nameab").value;
+    var d = document.getElementById("totalbillab").value;
+    var e = document.getElementById("paidmonthbillab").value;
+    updatebill(a,b,c,d,e);
+}
+
 function myFunction() {
     var x = document.getElementById("month").value;
     var y = document.getElementById("year").value;
@@ -239,81 +282,78 @@ $( document ).ready(function() {
 });
 </script>
 <div class = "jumbotron text-center">
-<div class="container">
+    <div class="container">
     <center>
-  <h2>Monthly Phone Bill</h2>
+      <h2>Monthly Phone Bill</h2>
+      <label for="bday"><font size="4">Select Month: </font></label>
+        <select id="month" name="month">
+        <option >January</option>
+        <option>February</option>
+        <option>March</option>
+        <option>April</option>
+        <option>May</option>
+        <option>June</option>
+        <option>July</option>
+        <option selected>August</option>
+        <option>September</option>
+        <option>October</option>
+        <option>November</option>
+        <option>December</option>
+      </select>
+      <select id="year" name="year">
+        <option selected>2018</option>
+        <option>2019</option>
+      </select>
+      <button class ="btn btn-primary btn-md" onclick="myFunction()">View Bill</button>
+      <p></p>
+      <div style="width:300px; height:300px">
+      <div id="newtable"></div>
+      </div>
+    </center>
 
-<label for="bday"><font size="4">Select Month: </font></label>
-<select id="month" name="month">
-    <option >January</option>
-    <option>February</option>
-    <option>March</option>
-    <option>April</option>
-    <option>May</option>
-    <option>June</option>
-    <option>July</option>
-    <option selected>August</option>
-    <option>September</option>
-    <option>October</option>
-    <option>November</option>
-    <option>December</option>
-  </select>
-  <select id="year" name="year">
-      <option selected>2018</option>
-      <option>2019</option>
+    <h2>Get Detailed Bill</h2>
+    <label for="bday"><font size="4">Name: </font></label>
+    <select id="name" name="name">
+      <option>chandu</option>
+      <option>anusha</option>
+      <option>pavan</option>
+      <option>pradeep</option>
+      <option>srinu</option>
+      <option>gopal</option>
+      <option>kaja</option>
     </select>
-<button class ="btn btn-primary btn-md" onclick="myFunction()">View Bill</button>
-<p>
-<p></p>
-<center>
-<div style="width:300px; height:300px">
-<div id="newtable"></div>
-</div>
-</center>
-
-<h2>Get Detailed Bill</h2>
-<label for="bday"><font size="4">Name: </font></label>
-<select id="name" name="name">
-  <option>chandu</option>
-  <option>anusha</option>
-  <option>pavan</option>
-  <option>pradeep</option>
-  <option>srinu</option>
-  <option>gopal</option>
-  <option>kaja</option>
-</select>
-<label for="bday"><font size="4">Month: </font></label>
-<select id="month2" name="month">
-    <option >January</option>
-    <option>February</option>
-    <option>March</option>
-    <option>April</option>
-    <option>May</option>
-    <option>June</option>
-    <option>July</option>
-    <option selected>August</option>
-    <option >September</option>
-    <option>October</option>
-    <option>November</option>
-    <option>December</option>
-  </select>
-  <label for="bday"><font size="4">Year: </font></label>
-  <select id="year2" name="year">
+    <label for="bday"><font size="4">Month: </font></label>
+    <select id="month2" name="month">
+      <option >January</option>
+      <option>February</option>
+      <option>March</option>
+      <option>April</option>
+      <option>May</option>
+      <option>June</option>
+      <option>July</option>
+      <option selected>August</option>
+      <option >September</option>
+      <option>October</option>
+      <option>November</option>
+      <option>December</option>
+    </select>
+    <label for="bday"><font size="4">Year: </font></label>
+    <select id="year2" name="year">
       <option selected>2018</option>
       <option>2019</option>
     </select>
     <button class ="btn btn-primary btn-md" onclick="myFunction2()">View </button>
     <p></p>
-  <center>
-  <div style="width:300px; height:300px">
-  <div id="detailedtable"></div>
-  </div>
-  </center>
+    <center>
+    <div style="width:300px; height:300px">
+    <div id="detailedtable"></div>
+    </div>
+    </center>
 
-  <h2>Payment Information</h2>
-
-  <label for="bday"><font size="4">Month: </font></label>
-  <select id="month3" name="month3">
+    <center>
+    <h2>Payment Information</h2>
+    <label for="bday"><font size="4">Month: </font></label>
+    <select id="month3" name="month3">
       <option >January</option>
       <option>February</option>
       <option>March</option>
@@ -328,26 +368,63 @@ $( document ).ready(function() {
       <option>December</option>
     </select>
     <select id="year3" name="year3">
-        <option selected>2018</option>
-        <option>2019</option>
-      </select>
-  <!-- <input type="date" name="date" data-date-format ="yyyy-mm-dd" id="dateinput" value="2018-09-22"> -->
-  <button class ="btn btn-primary btn-md" onclick="myFunction3()">View Payments</button>
-  <p>
-  <p></p>
-  <center>
-  <div style="width:300px; height:320px">
-  <div id="paymentstable"></div>
-  </div>
+      <option selected>2018</option>
+      <option>2019</option>
+    </select>
+    <button class ="btn btn-primary btn-md" onclick="myFunction3()">View Payments</button>
+    <p></p>
+      <div style="width:300px; height:380px">
+        <div id="paymentstable"></div>
+      </div>
+    </center>
+
+    <center>
+      <!-- <div style="width:300px; height:420px"> -->
+
+        <h2>Add Monthly Bill</h2>
+        <div class="p-3 mb-2 bg-success" style="width:350px;height:190px;">
+          <label for="bday"><font size="3">Select Month: </font></label>
+          <select id="monthab" name="monthab">
+            <option>January</option>
+            <option>February</option>
+            <option>March</option>
+            <option>April</option>
+            <option>May</option>
+            <option>June</option>
+            <option>July</option>
+            <option selected>August</option>
+            <option>September</option>
+            <option>October</option>
+            <option>November</option>
+            <option>December</option>
+          </select>
+          <select id="yearab" name="yearab">
+            <option selected>2018</option>
+            <option>2019</option>
+          </select>
+          <p></p>
+          <label for="nameab"><font size="3">Select Name: </font></label>
+          <select id="nameab" name="nameab">
+          <option selected>pradeep</option>
+          <option>chandu</option>
+            <option>kaja</option>
+            <option>anusha</option>
+            <option>srinu</option>
+            <option>pavan</option>
+            <option>gopal</option>
+          </select>
+          <p></p>
+          <label for="nameab">Enter total bill: </label>
+          <input id="totalbillab" placeholder="Amount" type="text" name="total_bill_field" style="width: 60px; height:25px" value="">
+          <label for="name">Paid Monthly Bill </label>
+          <select id="paidmonthbillab" name="paidmonthbillab">
+            <option selected>no</option>
+            <option>yes</option>
+          </select>
+          <p></p>
+          <button class ="btn btn-primary btn-md" id="billbtn" onclick="myFunctionub()">Post Bill</button>
+        </div>
   </center>
-  </div>
-</p>
-</div>
-</div>
 
-</center>
-
-</div>
-</div>
 </body>
 </html>
