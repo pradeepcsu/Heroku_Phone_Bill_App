@@ -142,7 +142,8 @@ app.post('/updateBillInfo',function(req, res){
     console.log(paidbill);
 
 
-    var sql="update users1 set dues = '"+totalbill+"', paid_monthly_bill = '"+paidbill+"' where month='"+month+"' and year = '"+year+"' and name = '"+name+"'";        
+    var sql="update users1 set dues = '"+totalbill+"', phone_bill = '"+totalbill+"', paid_monthly_bill = '"+paidbill+"' where month='"+month+"' and year = '"+year+"' and name = '"+name+"'";        
+       
     pool.query(sql, function (err, rows) {       
         if (err) {
             res.send(JSON.stringify({
