@@ -214,7 +214,7 @@ if (result) {
 
 
 function updatebill(month,year,name,totalbill,paidbill) {  
-  var result = confirm("Want to add "+ totalbill + " for "+name+ "?");
+  var result = confirm("Want to add $"+ totalbill + " for "+name+ " - billing period "+month+" "+year+ "?");
 if (result) {
  $.ajax({
               type: "POST",
