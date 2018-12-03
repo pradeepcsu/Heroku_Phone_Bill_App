@@ -35,7 +35,7 @@
                   msg = 'Uncaught Error.\n' + jqXHR.responseText;
                 }
                 //$('#post').html(msg);
-                // alert(msg);
+                alert(msg);
               },
               success: function(data) {
                 var str="";
@@ -214,7 +214,7 @@ if (result) {
 
 
 function updatebill(month,year,name,totalbill,paidbill) {  
-  var result = confirm("Want to add $"+ totalbill + " for "+name+ " - billing period "+month+" "+year+ "?");
+  var result = confirm("Want to add "+ totalbill + " for "+name+ "?");
 if (result) {
  $.ajax({
               type: "POST",
@@ -281,7 +281,9 @@ $( document ).ready(function() {
 
 });
 </script>
-<div class = "jumbotron text-center">
+<div>
+<!-- <div class = "jumbotron text-center"> -->
+    <center>
     <div class="container">
     <center>
       <h2>Monthly Phone Bill</h2>
@@ -294,10 +296,10 @@ $( document ).ready(function() {
         <option>May</option>
         <option>June</option>
         <option>July</option>
-        <option selected>August</option>
+        <option>August</option>
         <option>September</option>
         <option>October</option>
-        <option>November</option>
+        <option selected>November</option>
         <option>December</option>
       </select>
       <select id="year" name="year">
@@ -306,7 +308,7 @@ $( document ).ready(function() {
       </select>
       <button class ="btn btn-primary btn-md" onclick="myFunction()">View Bill</button>
       <p></p>
-      <div style="width:300px; height:300px">
+      <div style="width:300px; height:350px">
       <div id="newtable"></div>
       </div>
     </center>
@@ -321,7 +323,8 @@ $( document ).ready(function() {
       <option>srinu</option>
       <option>gopal</option>
       <option>kaja</option>
-      <option>amathi</option>
+      <option>suresh</option>
+
     </select>
     <label for="bday"><font size="4">Month: </font></label>
     <select id="month2" name="month">
@@ -332,10 +335,10 @@ $( document ).ready(function() {
       <option>May</option>
       <option>June</option>
       <option>July</option>
-      <option selected>August</option>
+      <option>August</option>
       <option >September</option>
       <option>October</option>
-      <option>November</option>
+      <option selected>November</option>
       <option>December</option>
     </select>
     <label for="bday"><font size="4">Year: </font></label>
@@ -362,10 +365,10 @@ $( document ).ready(function() {
       <option>May</option>
       <option>June</option>
       <option>July</option>
-      <option selected>August</option>
+      <option >August</option>
       <option>September</option>
       <option>October</option>
-      <option>November</option>
+      <option selected>November</option>
       <option>December</option>
     </select>
     <select id="year3" name="year3">
@@ -374,7 +377,7 @@ $( document ).ready(function() {
     </select>
     <button class ="btn btn-primary btn-md" onclick="myFunction3()">View Payments</button>
     <p></p>
-      <div style="width:300px; height:380px">
+      <div style="width:300px; height:450px">
         <div id="paymentstable"></div>
       </div>
     </center>
@@ -383,7 +386,7 @@ $( document ).ready(function() {
       <!-- <div style="width:300px; height:420px"> -->
 
         <h2>Add Monthly Bill</h2>
-        <div class="p-3 mb-2 bg-success" style="width:350px;height:190px;">
+        <div class="p-3 mb-2 bg-success" style="width:350px;height:180px;">
           <label for="bday"><font size="3">Select Month: </font></label>
           <select id="monthab" name="monthab">
             <option>January</option>
@@ -393,10 +396,10 @@ $( document ).ready(function() {
             <option>May</option>
             <option>June</option>
             <option>July</option>
-            <option selected>August</option>
+            <option>August</option>
             <option>September</option>
             <option>October</option>
-            <option>November</option>
+            <option selected>November</option>
             <option>December</option>
           </select>
           <select id="yearab" name="yearab">
@@ -413,8 +416,7 @@ $( document ).ready(function() {
             <option>srinu</option>
             <option>pavan</option>
             <option>gopal</option>
-            <option>amathi</option>
-
+            <option>suresh</option>
           </select>
           <p></p>
           <label for="nameab">Enter total bill: </label>
@@ -428,6 +430,8 @@ $( document ).ready(function() {
           <button class ="btn btn-primary btn-md" id="billbtn" onclick="myFunctionub()">Post Bill</button>
         </div>
   </center>
+</center>
+
 
 </body>
 </html>
